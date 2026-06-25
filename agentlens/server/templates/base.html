@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgentLens</title>
+  <!-- Self-hosted fonts first: guarantees the UI renders OFFLINE. Declared before
+       the CDN so these local faces satisfy Inter/JetBrains Mono without a network
+       hit; the Google Fonts link below is only a progressive online enhancement. -->
+  <link rel="stylesheet" href="/static/fonts.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"
+        media="all" onerror="this.media='none'">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body data-page="{{ page }}" data-project="{{ project|default('') }}" data-trace-id="{{ trace_id|default('') }}">
+  <nav class="topnav">
+    <a class="brand" href="/"><span class="logo">◎</span> <span>AgentLens</span></a>
+    <div class="navlinks">
+      <a data-nav="overview" href="/">Overview</a>
+      <a data-nav="runs" href="/runs">Runs</a>
+      <a data-nav="agents" href="/agents">Agents</a>
+      <a data-nav="tools" href="/tools">Tools</a>
+      <a data-nav="memory" href="/memory">Memory</a>
+      <a data-nav="failures" href="/failures">Failures</a>
+      <a data-nav="cost" href="/cost">Cost</a>
+      <a data-nav="docs" href="/docs">Docs</a>
+    </div>
+    <div class="nav-right">
+      <select id="projectSelect" title="Project"></select>
+    </div>
+  </nav>
+  <main class="container" id="app">
+    <div class="empty">Loading…</div>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

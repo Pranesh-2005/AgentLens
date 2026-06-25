@@ -1,0 +1,11 @@
+*.env
+plan.md
+opt.txt
+*.zip
+agentbank/
+.pytest_cache/
+.benchmarks/
+*.agentlens/
+*.egg-info/
+.venv/
+__pycache__/

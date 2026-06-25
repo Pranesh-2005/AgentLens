@@ -1,0 +1,36 @@
+# Install only what you need -- each agent file's docstring also lists its
+# own requirements. Everything shares `requests` + `python-dotenv`.
+
+requests
+python-dotenv
+
+# LangChain / LangGraph
+langchain
+langchain-openai
+langgraph
+
+# LlamaIndex
+llama-index-core
+llama-index-llms-openai-like
+
+# CrewAI (native/no-litellm extra)
+crewai[openai]
+
+# AutoGen (AgentChat)
+autogen-agentchat
+autogen-ext[openai]
+
+# PydanticAI
+pydantic-ai-slim[openai]
+
+# OpenAI Agents SDK
+openai-agents
+
+# Strands Agents
+strands-agents[openai]
+
+# Anthropic Claude Agent SDK + its local bridge proxy
+claude-agent-sdk
+fastapi
+uvicorn
+openai

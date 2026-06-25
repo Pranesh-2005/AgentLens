@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentLens — Guide</title>
+
+<style>
+:root{
+  --bg:#0b0f16; --panel:#111722; --panel2:#0e141d; --border:#1e2735; --border-soft:#171f2b;
+  --text:#e7edf5; --muted:#9fb0c3; --faint:#6b7a8d; --accent:#5b9bff; --accent-soft:rgba(91,155,255,.10);
+  --good:#46d39a; --bad:#ff6b6b; --radius:13px;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.65;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.layout{display:grid;grid-template-columns:288px minmax(0,1fr);max-width:1320px;margin:0 auto;gap:0}
+/* sidebar */
+aside{position:sticky;top:0;height:100vh;overflow-y:auto;border-right:1px solid var(--border-soft);
+  padding:26px 18px 60px;background:linear-gradient(180deg,var(--panel2),var(--bg))}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;margin:0 6px 18px;color:var(--text)}
+.brand .logo{color:var(--accent);filter:drop-shadow(0 0 10px rgba(91,155,255,.55));font-size:19px}
+.brand small{display:block;font-weight:500;font-size:11.5px;color:var(--faint);letter-spacing:.04em}
+.home{display:inline-block;margin:0 6px 14px;font-size:12.5px;color:var(--muted)}
+.home:hover{color:var(--accent)}
+.search{width:100%;padding:9px 12px;margin:0 0 16px;border-radius:10px;border:1px solid var(--border);
+  background:var(--panel);color:var(--text);font-size:13px;font-family:var(--sans);outline:none}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+nav{display:flex;flex-direction:column;gap:1px}
+nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--muted);font-size:13.2px;line-height:1.35;
+  border-left:2px solid transparent}
+nav a.lvl3{padding-left:24px;font-size:12.6px;color:var(--faint)}
+nav a:hover{background:var(--accent-soft);color:var(--text);text-decoration:none}
+nav a.active{background:var(--accent-soft);color:var(--text);border-left-color:var(--accent)}
+nav a.hidden{display:none}
+/* content */
+main{padding:42px 56px 120px;max-width:900px}
+main h1{font-size:33px;line-height:1.15;letter-spacing:-.02em;margin:0 0 6px}
+main h2{font-size:23px;letter-spacing:-.01em;margin:52px 0 14px;padding-top:14px;border-top:1px solid var(--border-soft)}
+main h3{font-size:17.5px;margin:30px 0 10px}
+main h4{font-size:15px;margin:22px 0 8px;color:var(--muted)}
+.anchor{margin-left:10px;color:var(--faint);opacity:0;font-weight:400;text-decoration:none;transition:opacity .12s}
+h1:hover .anchor,h2:hover .anchor,h3:hover .anchor{opacity:1}
+main p{margin:0 0 14px}
+main hr{border:none;border-top:1px solid var(--border-soft);margin:34px 0}
+main ul,main ol{margin:0 0 16px;padding-left:24px}
+main li{margin:5px 0}
+strong{color:#fff;font-weight:650}
+code{font-family:var(--mono);font-size:.86em;background:rgba(255,255,255,.055);border:1px solid var(--border-soft);
+  border-radius:5px;padding:1.5px 5px;color:#d8c7ff}
+blockquote{margin:0 0 16px;padding:12px 18px;border-left:3px solid var(--accent);border-radius:0 10px 10px 0;
+  background:var(--accent-soft);color:var(--muted)}
+blockquote code{color:#d8c7ff}
+/* code blocks */
+.codeblock{position:relative;margin:0 0 18px;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--panel2);overflow:hidden}
+.codeblock pre{margin:0;padding:16px 18px;overflow-x:auto}
+.codeblock code{display:block;background:none;border:none;padding:0;color:#cdd9e7;font-size:13px;line-height:1.6}
+.codeblock .lang{position:absolute;top:0;left:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);padding:5px 12px;background:var(--panel);border-bottom-right-radius:8px}
+.codeblock .lang+button.copy{}
+.codeblock:has(.lang) pre{padding-top:30px}
+.copy{position:absolute;top:7px;right:8px;font-family:var(--sans);font-size:11px;color:var(--muted);cursor:pointer;
+  background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:3px 10px;opacity:0;transition:.12s}
+.codeblock:hover .copy{opacity:1}
+.copy:hover{color:var(--text);border-color:var(--accent)}
+.copy.done{color:var(--good);border-color:var(--good)}
+/* tables */
+.tablewrap{overflow-x:auto;margin:0 0 18px;border:1px solid var(--border);border-radius:var(--radius)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{text-align:left;background:var(--panel);color:var(--muted);font-weight:600;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.05em;padding:11px 14px;border-bottom:1px solid var(--border)}
+td{padding:10px 14px;border-bottom:1px solid var(--border-soft);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even){background:rgba(255,255,255,.012)}
+/* responsive */
+.menu-toggle{display:none}
+@media(max-width:880px){
+  .layout{grid-template-columns:1fr}
+  aside{position:fixed;z-index:40;width:280px;left:-300px;transition:left .2s;box-shadow:0 0 40px rgba(0,0,0,.5)}
+  aside.open{left:0}
+  main{padding:64px 22px 90px}
+  .menu-toggle{display:flex;position:fixed;top:14px;left:14px;z-index:50;align-items:center;justify-content:center;
+    width:42px;height:38px;border-radius:10px;background:var(--panel);border:1px solid var(--border);color:var(--text);
+    cursor:pointer;font-size:18px}
+}
+</style>
+</head>
+<body>
+<button class="menu-toggle" aria-label="Menu">&#9776;</button>
+<div class="layout">
+<aside>
+  <div class="brand"><span class="logo">&#9678;</span><span>AgentLens<small>The Complete Guide</small></span></div>
+  
+  <input id="docsearch" class="search" type="search" placeholder="Filter sections…" autocomplete="off">
+  <nav>
+<a class="lvl2" href="#table-of-contents" data-slug="table-of-contents">Table of contents</a>
+<a class="lvl2" href="#0-decision-card-read-this-first" data-slug="0-decision-card-read-this-first">0. Decision card (read this first)</a>
+<a class="lvl2" href="#1-what-agentlens-is-and-isnt" data-slug="1-what-agentlens-is-and-isnt">1. What AgentLens is (and isn&#x27;t)</a>
+<a class="lvl2" href="#2-install" data-slug="2-install">2. Install</a>
+<a class="lvl2" href="#3-the-three-instrumentation-layers--when-to-use-which" data-slug="3-the-three-instrumentation-layers--when-to-use-which">3. The three instrumentation layers — when to use which</a>
+<a class="lvl2" href="#4-layer-1--auto-patch-monitorstart" data-slug="4-layer-1--auto-patch-monitorstart">4. Layer 1 — Auto-patch (monitor.start)</a>
+<a class="lvl2" href="#5-layer-2--manual-api-trace_--log_" data-slug="5-layer-2--manual-api-trace_--log_">5. Layer 2 — Manual API (trace_ / log_)</a>
+<a class="lvl3" href="#51-initialize-once" data-slug="51-initialize-once">5.1 Initialize (once)</a>
+<a class="lvl3" href="#52-span-boundaries-context-manager-or-decorator" data-slug="52-span-boundaries-context-manager-or-decorator">5.2 Span boundaries (context manager or decorator)</a>
+<a class="lvl3" href="#53-event-loggers-leaf-spans" data-slug="53-event-loggers-leaf-spans">5.3 Event loggers (leaf spans)</a>
+<a class="lvl3" href="#54-helpers" data-slug="54-helpers">5.4 Helpers</a>
+<a class="lvl2" href="#6-layer-3--framework-adapters" data-slug="6-layer-3--framework-adapters">6. Layer 3 — Framework adapters</a>
+<a class="lvl3" href="#langchain--agentlenscallbackhandler" data-slug="langchain--agentlenscallbackhandler">LangChain — AgentLensCallbackHandler</a>
+<a class="lvl3" href="#langgraph--same-handler" data-slug="langgraph--same-handler">LangGraph — same handler</a>
+<a class="lvl3" href="#llamaindex--agentlensllamahandler" data-slug="llamaindex--agentlensllamahandler">LlamaIndex — AgentLensLlamaHandler</a>
+<a class="lvl3" href="#crewai--step_callback--task_callback--instrument_tools" data-slug="crewai--step_callback--task_callback--instrument_tools">CrewAI — step_callback / task_callback / instrument_tools</a>
+<a class="lvl3" href="#autogen--instrument_agent" data-slug="autogen--instrument_agent">AutoGen — instrument_agent</a>
+<a class="lvl3" href="#pydanticai--instrument_agent" data-slug="pydanticai--instrument_agent">PydanticAI — instrument_agent</a>
+<a class="lvl3" href="#openai-agents-sdk--install" data-slug="openai-agents-sdk--install">OpenAI Agents SDK — install()</a>
+<a class="lvl3" href="#strands--callback_handler" data-slug="strands--callback_handler">Strands — callback_handler</a>
+<a class="lvl3" href="#anthropic-agent-sdk--traced_async_tool" data-slug="anthropic-agent-sdk--traced_async_tool">Anthropic Agent SDK — traced_async_tool</a>
+<a class="lvl3" href="#mcp--fastmcp--instrument_server" data-slug="mcp--fastmcp--instrument_server">MCP / FastMCP — instrument_server</a>
+<a class="lvl3" href="#any-framework--generic-tool-wrappers-adapterscommon" data-slug="any-framework--generic-tool-wrappers-adapterscommon">Any framework — generic tool wrappers (adapters.common)</a>
+<a class="lvl2" href="#7-span-model--spankind-reference" data-slug="7-span-model--spankind-reference">7. Span model &amp; SpanKind reference</a>
+<a class="lvl2" href="#8-the-dashboard--page-by-page" data-slug="8-the-dashboard--page-by-page">8. The dashboard — page by page</a>
+<a class="lvl2" href="#9-cli-reference" data-slug="9-cli-reference">9. CLI reference</a>
+<a class="lvl2" href="#10-configuration--environment-variables" data-slug="10-configuration--environment-variables">10. Configuration &amp; environment variables</a>
+<a class="lvl2" href="#11-local-vs-http-client--when-to-use-which" data-slug="11-local-vs-http-client--when-to-use-which">11. Local vs HTTP client — when to use which</a>
+<a class="lvl2" href="#12-cost--token-tracking" data-slug="12-cost--token-tracking">12. Cost &amp; token tracking</a>
+<a class="lvl2" href="#13-recipes" data-slug="13-recipes">13. Recipes</a>
+<a class="lvl3" href="#131-minimal-custom-agent-fully-traced" data-slug="131-minimal-custom-agent-fully-traced">13.1 Minimal custom agent, fully traced</a>
+<a class="lvl3" href="#132-zero-config--framework-the-lazy-best-practice" data-slug="132-zero-config--framework-the-lazy-best-practice">13.2 Zero-config + framework, the lazy best-practice</a>
+<a class="lvl3" href="#133-catch-a-tool-failure-in-the-dashboard" data-slug="133-catch-a-tool-failure-in-the-dashboard">13.3 Catch a tool failure in the dashboard</a>
+<a class="lvl3" href="#134-correlate-agentlens-with-your-own-logs" data-slug="134-correlate-agentlens-with-your-own-logs">13.4 Correlate AgentLens with your own logs</a>
+<a class="lvl2" href="#14-safety-guarantees" data-slug="14-safety-guarantees">14. Safety guarantees</a>
+<a class="lvl2" href="#15-troubleshooting" data-slug="15-troubleshooting">15. Troubleshooting</a>
+<a class="lvl2" href="#16-ai-agent-cheat-sheet" data-slug="16-ai-agent-cheat-sheet">16. AI-agent cheat sheet</a>
+  </nav>
+</aside>
+<main>
+<h1 id="agentlens--the-complete-guide">AgentLens — The Complete Guide<a class="anchor" href="#agentlens--the-complete-guide" aria-label="Link">#</a></h1>
+<blockquote>Local-first diagnostics &amp; observability for AI agents. Answers one question: <strong>&quot;Why did my agent behave this way?&quot;</strong></blockquote>
+<p>This guide is written for <strong>two audiences</strong>:</p>
+<ul><li><strong>Humans</strong> — read top to bottom, or jump to the section you need.</li><li><strong>AI coding agents</strong> — start at <a href="#0-decision-card-read-this-first">§0 Decision Card</a>. Every &quot;when to use what&quot; choice is a lookup table, not prose. Snippets are copy-paste-ready.</li></ul>
+<hr>
+<h2 id="table-of-contents">Table of contents<a class="anchor" href="#table-of-contents" aria-label="Link">#</a></h2>
+<ol><li><a href="#0-decision-card-read-this-first">Decision card (read this first)</a></li><li><a href="#1-what-agentlens-is-and-isnt">What AgentLens is (and isn&#x27;t)</a></li><li><a href="#2-install">Install</a></li><li><a href="#3-the-three-instrumentation-layers--when-to-use-which">The three instrumentation layers — when to use which</a></li><li><a href="#4-layer-1--auto-patch-monitorstart">Layer 1 — Auto-patch (<code>monitor.start</code>)</a></li><li><a href="#5-layer-2--manual-api-trace_--log_">Layer 2 — Manual API (<code>trace_*</code> / <code>log_*</code>)</a></li><li><a href="#6-layer-3--framework-adapters">Layer 3 — Framework adapters</a></li><li><a href="#7-span-model--spankind-reference">Span model &amp; <code>SpanKind</code> reference</a></li><li><a href="#8-the-dashboard--page-by-page">The dashboard — page by page</a></li><li><a href="#9-cli-reference">CLI reference</a></li><li><a href="#10-configuration--environment-variables">Configuration &amp; environment variables</a></li><li><a href="#11-local-vs-http-client--when-to-use-which">Local vs HTTP client — when to use which</a></li><li><a href="#12-cost--token-tracking">Cost &amp; token tracking</a></li><li><a href="#13-recipes">Recipes</a></li><li><a href="#14-safety-guarantees">Safety guarantees</a></li><li><a href="#15-troubleshooting">Troubleshooting</a></li><li><a href="#16-ai-agent-cheat-sheet">AI-agent cheat sheet</a></li></ol>
+<hr>
+<h2 id="0-decision-card-read-this-first">0. Decision card (read this first)<a class="anchor" href="#0-decision-card-read-this-first" aria-label="Link">#</a></h2>
+<p><strong>Goal → action</strong> lookup. Pick the row that matches the situation.</p>
+<div class="tablewrap"><table><thead><tr><th>Situation</th><th>Do this</th></tr></thead><tbody><tr><td>Just want LLM calls/tokens/cost captured, zero code changes</td><td><code>from agentlens import monitor; monitor.start()</code></td></tr><tr><td>Using a supported agent framework (LangChain, CrewAI, …)</td><td>Add that framework&#x27;s <a href="#6-layer-3--framework-adapters">adapter</a></td></tr><tr><td>Custom agent loop / no framework</td><td><a href="#5-layer-2--manual-api-trace_--log_">Manual API</a>: <code>trace_agent</code> + <code>log_tool</code>/<code>log_memory</code>/<code>log_llm</code></td></tr><tr><td>Want the richest traces (workflow graph + agents + tools + cost)</td><td>Combine: <code>monitor.start()</code> <strong>and</strong> the adapter <strong>and</strong> manual spans where the framework is blind</td></tr><tr><td>Production service, many processes/workers</td><td><a href="#11-local-vs-http-client--when-to-use-which">HTTP client</a> → one shared server</td></tr><tr><td>One script, notebook, local dev</td><td>Default <a href="#11-local-vs-http-client--when-to-use-which">local client</a> (direct SQLite, no server)</td></tr><tr><td>Need to see what happened</td><td><code>agentlens ui</code> → http://127.0.0.1:7180</td></tr></tbody></table></div>
+<p><strong>Three rules that never change:</strong></p>
+<ol><li>AgentLens <strong>never raises into your code.</strong> If observability fails, your agent keeps running. Safe to wrap anything.</li><li><strong>No keys, no cloud, no network</strong> (unless you opt into the HTTP client). Everything lands in <code>./.agentlens/agentlens.db</code>.</li><li>Layers <strong>stack.</strong> Auto-patch + adapter + manual can all run at once; spans merge into one trace tree.</li></ol>
+<hr>
+<h2 id="1-what-agentlens-is-and-isnt">1. What AgentLens is (and isn&#x27;t)<a class="anchor" href="#1-what-agentlens-is-and-isnt" aria-label="Link">#</a></h2>
+<p><strong>Is:</strong> a local, zero-config tool that records <em>spans</em> of agent execution — LLM calls, tool calls, memory ops, decisions, retrievals, agent runs, workflows — into a single SQLite file, then serves a dashboard to explore them. Built to debug <em>agent behavior</em>: why it picked a tool, where it looped, what a step cost, which call failed.</p>
+<p><strong>Isn&#x27;t:</strong> a hosted APM, a prompt-eval framework, a vector DB, or a tracing standard. It does not require OpenTelemetry, an account, or an API key. (It can replay LLMs for cost backfill, but that is optional.)</p>
+<p><strong>Mental model:</strong> like <code>mlflow ui</code>, but the unit of observation is an <strong>agent span tree</strong> instead of an ML run.</p>
+<div class="codeblock"><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>session
+└─ workflow            (the run)
+   └─ agent            (a reasoning unit)
+      ├─ llm           (a model call: model, tokens, cost)
+      ├─ tool          (a tool call: args, result, retries, error)
+      ├─ memory        (read/write/update/delete, hit/miss)
+      └─ decision      (options, chosen, reason)</code></pre></div>
+<hr>
+<h2 id="2-install">2. Install<a class="anchor" href="#2-install" aria-label="Link">#</a></h2>
+<div class="codeblock"><span class="lang">bash</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>pip install agentlens                 # core (SQLite + dashboard + manual API + auto-patch)
+
+# framework adapters as extras (only what you use):
+pip install &quot;agentlens[langchain]&quot;
+pip install &quot;agentlens[langgraph]&quot;
+pip install &quot;agentlens[llamaindex]&quot;
+pip install &quot;agentlens[crewai]&quot;
+pip install &quot;agentlens[autogen]&quot;
+pip install &quot;agentlens[pydanticai]&quot;
+pip install &quot;agentlens[openai-agents]&quot;
+pip install &quot;agentlens[mcp]&quot;
+pip install &quot;agentlens[fastmcp]&quot;
+pip install &quot;agentlens[all]&quot;          # every adapter
+pip install &quot;agentlens[dev]&quot;          # + pytest</code></pre></div>
+<p>Auto-patch needs <strong>no extra</strong> — it patches whatever LLM SDK is already installed (<code>openai</code>, <code>anthropic</code>, <code>google-generativeai</code>, <code>groq</code>, <code>litellm</code>).</p>
+<p>Requires Python 3.10+.</p>
+<hr>
+<h2 id="3-the-three-instrumentation-layers--when-to-use-which">3. The three instrumentation layers — when to use which<a class="anchor" href="#3-the-three-instrumentation-layers--when-to-use-which" aria-label="Link">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Layer</th><th>What it captures</th><th>Code cost</th><th>Use when</th></tr></thead><tbody><tr><td><strong>1. Auto-patch</strong> <code>monitor.start()</code></td><td><code>llm</code> spans (model, tokens, cost) for installed SDKs</td><td>1 line</td><td>You call LLM SDKs directly and want them tracked for free.</td></tr><tr><td><strong>2. Manual API</strong> <code>trace_*</code> / <code>log_*</code></td><td>Anything you wrap: agents, tools, memory, decisions, workflows</td><td>per-span</td><td>Custom loops, or to enrich what frameworks don&#x27;t expose.</td></tr><tr><td><strong>3. Adapters</strong></td><td>Framework-native agent/tool/llm/workflow spans</td><td>1 import + 1 hook</td><td>You use a supported framework and want its structure for free.</td></tr></tbody></table></div>
+<p>They are <strong>additive</strong>. Best traces = all three:</p>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens import monitor
+from agentlens.adapters.langchain import AgentLensCallbackHandler
+import agentlens
+
+monitor.start(project=&quot;my-bot&quot;)                          # layer 1: raw LLM SDK calls
+cb = AgentLensCallbackHandler()                           # layer 3: framework structure
+with agentlens.trace_workflow(&quot;nightly-research&quot;):        # layer 2: your own boundary
+    agent.invoke(state, config={&quot;callbacks&quot;: [cb]})</code></pre></div>
+<hr>
+<h2 id="4-layer-1--auto-patch-monitorstart">4. Layer 1 — Auto-patch (<code>monitor.start</code>)<a class="anchor" href="#4-layer-1--auto-patch-monitorstart" aria-label="Link">#</a></h2>
+<p>The headline one-liner. Detects installed LLM SDKs, monkeypatches their completion methods (sync <strong>and</strong> async), and emits an <code>llm</code> span — with tokens and backfilled cost — for every call.</p>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens import monitor
+monitor.start()                       # project=&quot;default&quot;, local store
+# ... any openai / anthropic / gemini / groq / litellm call now produces an llm span ...
+monitor.stop()                        # remove patches + flush (optional; auto-flush on exit)</code></pre></div>
+<p><strong>Signature</strong></p>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>monitor.start(
+    project: str = &quot;default&quot;,
+    tracking_uri: str | None = None,   # set → send to a running server instead of local SQLite
+    db_path: str | None = None,        # override the SQLite path
+    frameworks: list[str] | None = None,  # restrict which SDK patchers run; None = all
+) -&gt; dict[str, bool]                   # patch report, e.g. {&quot;openai&quot;: True, &quot;groq&quot;: True, &quot;anthropic&quot;: False}</code></pre></div>
+<p><strong>Covered SDKs:</strong> <code>openai</code>, <code>anthropic</code>, <code>gemini</code>, <code>groq</code>, <code>litellm</code>.</p>
+<p><strong>When to use:</strong> always, as a baseline — it&#x27;s free LLM/cost visibility. Combine with adapters/manual for structure.</p>
+<p><strong>When <code>frameworks=</code> helps:</strong> narrow patching in a process that imports many SDKs but you only want one tracked: <code>monitor.start(frameworks=[&quot;litellm&quot;])</code>.</p>
+<p><code>monitor.stop()</code> restores the original methods (idempotent) and flushes. You rarely need it — patches are harmless and a flush runs at exit — but it&#x27;s there for tests and clean teardown.</p>
+<hr>
+<h2 id="5-layer-2--manual-api-trace_--log_">5. Layer 2 — Manual API (<code>trace_*</code> / <code>log_*</code>)<a class="anchor" href="#5-layer-2--manual-api-trace_--log_" aria-label="Link">#</a></h2>
+<p>Framework-agnostic. Use for custom agents, or to record what a framework hides (memory hits, decisions, retries).</p>
+<h3 id="51-initialize-once">5.1 Initialize (once)<a class="anchor" href="#51-initialize-once" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>import agentlens
+agentlens.init(project=&quot;research-bot&quot;)    # local ./.agentlens/agentlens.db</code></pre></div>
+<p><code>init(project=&quot;default&quot;, tracking_uri=None, db_path=None)</code>. Omit <code>tracking_uri</code> for local SQLite; set it (e.g. <code>&quot;http://127.0.0.1:7180&quot;</code>) to stream to a server.</p>
+<blockquote><code>monitor.start()</code> calls <code>init()</code> for you. Only call <code>init()</code> directly when you use the manual/adapter layers <strong>without</strong> auto-patch.</blockquote>
+<h3 id="52-span-boundaries-context-manager-or-decorator">5.2 Span boundaries (context manager <strong>or</strong> decorator)<a class="anchor" href="#52-span-boundaries-context-manager-or-decorator" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>with agentlens.trace_session(&quot;user-123-chat&quot;):
+    with agentlens.trace_workflow(&quot;answer-question&quot;):
+        with agentlens.trace_agent(&quot;planner&quot;, role=&quot;orchestrator&quot;):
+            ...   # log_* calls here nest under &quot;planner&quot;
+
+@agentlens.trace_agent(&quot;researcher&quot;)      # also works as a decorator
+def research(q): ...</code></pre></div>
+<div class="tablewrap"><table><thead><tr><th>Function</th><th>Span kind</th><th>Use for</th></tr></thead><tbody><tr><td><code>trace_session(name=&quot;session&quot;, **attrs)</code></td><td>session</td><td>A whole conversation / user session (outermost).</td></tr><tr><td><code>trace_workflow(name=&quot;workflow&quot;, **attrs)</code></td><td>workflow</td><td>One run of a pipeline/graph → becomes the <strong>workflow graph</strong>.</td></tr><tr><td><code>trace_agent(agent_name=&quot;agent&quot;, role=None, **attrs)</code></td><td>agent</td><td>One reasoning unit / sub-agent.</td></tr><tr><td><code>trace(name=None, kind=None, **attrs)</code></td><td>other (or given <code>kind</code>)</td><td>Generic span; prefer the typed ones above.</td></tr></tbody></table></div>
+<p>Nesting is automatic via contextvars — children inherit <code>trace_id</code>/<code>session_id</code> from whatever boundary is open. On exception, the span is marked <code>status=&quot;error&quot;</code> and the exception type/message recorded (then re-raised — <code>trace_*</code> does <strong>not</strong> swallow your errors, only observability errors are swallowed).</p>
+<h3 id="53-event-loggers-leaf-spans">5.3 Event loggers (leaf spans)<a class="anchor" href="#53-event-loggers-leaf-spans" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>agentlens.log_llm(model=&quot;gpt-4o&quot;, provider=&quot;openai&quot;,
+                  prompt=msgs, response=text,
+                  input_tokens=1200, output_tokens=400,
+                  cost=None,                 # None → backfilled from the price book
+                  duration_ms=812.4)
+
+agentlens.log_tool(&quot;web_search&quot;, args={&quot;q&quot;: &quot;agent obs&quot;}, result=[...],
+                   retry_count=1, error=None, duration_ms=120.0)
+
+agentlens.log_memory(&quot;read&quot;, &quot;user_prefs&quot;, value={&quot;lang&quot;: &quot;en&quot;}, hit=True)   # op: read|write|update|delete
+
+agentlens.log_decision(options=[&quot;search&quot;, &quot;answer&quot;], chosen=&quot;search&quot;,
+                       reason=&quot;not enough context yet&quot;)
+
+agentlens.log_retrieval(&quot;query text&quot;, results=[...], retriever=&quot;pgvector&quot;, duration_ms=33.0)
+
+agentlens.log_error(exc, kind=&quot;tool&quot;, retry_count=2)</code></pre></div>
+<p><strong>Auto-status:</strong> <code>log_tool(..., error=...)</code> and <code>log_error(...)</code> set <code>status=&quot;error&quot;</code> automatically → they show up in the <strong>Failure Explorer</strong> with no extra call.</p>
+<div class="tablewrap"><table><thead><tr><th>Logger</th><th>Span kind</th><th>Key attributes</th></tr></thead><tbody><tr><td><code>log_llm</code></td><td>llm</td><td>model, provider, prompt, response, input_tokens, output_tokens, cost</td></tr><tr><td><code>log_tool</code></td><td>tool</td><td>tool_name, args, result, retry_count, error, exception</td></tr><tr><td><code>log_memory</code></td><td>memory</td><td>op, memory_key, value, hit</td></tr><tr><td><code>log_decision</code></td><td>decision</td><td>options, chosen, reason</td></tr><tr><td><code>log_retrieval</code></td><td>retrieval</td><td>query, results, top_k, retriever</td></tr><tr><td><code>log_error</code></td><td>(given kind)</td><td>error, exception, retry_count</td></tr></tbody></table></div>
+<h3 id="54-helpers">5.4 Helpers<a class="anchor" href="#54-helpers" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>agentlens.current_trace_id()      # correlate AgentLens spans with your own logs
+agentlens.current_session_id()
+agentlens.flush()                 # force-flush buffered spans (HTTP client only; local is sync)</code></pre></div>
+<hr>
+<h2 id="6-layer-3--framework-adapters">6. Layer 3 — Framework adapters<a class="anchor" href="#6-layer-3--framework-adapters" aria-label="Link">#</a></h2>
+<p>Each adapter is <strong>import-time safe</strong> (won&#x27;t crash if the framework isn&#x27;t installed) and pure-mapping helpers are testable without the framework. Pick your framework:</p>
+<h3 id="langchain--agentlenscallbackhandler">LangChain — <code>AgentLensCallbackHandler</code><a class="anchor" href="#langchain--agentlenscallbackhandler" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.langchain import AgentLensCallbackHandler
+llm.invoke(&quot;...&quot;, config={&quot;callbacks&quot;: [AgentLensCallbackHandler()]})</code></pre></div>
+<p>Captures chain/tool/retriever/llm/chat-model events → agent/tool/llm/retrieval spans.</p>
+<h3 id="langgraph--same-handler">LangGraph — same handler<a class="anchor" href="#langgraph--same-handler" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.langgraph import AgentLensCallbackHandler
+agent = create_react_agent(llm, tools)
+agent.invoke({&quot;messages&quot;: [(&quot;user&quot;, q)]},
+             config={&quot;callbacks&quot;: [AgentLensCallbackHandler()]})</code></pre></div>
+<p>Produces the <strong>workflow graph</strong> (workflow → llm → tool → llm …).</p>
+<h3 id="llamaindex--agentlensllamahandler">LlamaIndex — <code>AgentLensLlamaHandler</code><a class="anchor" href="#llamaindex--agentlensllamahandler" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from llama_index.core.callbacks import CallbackManager
+from agentlens.adapters.llamaindex import AgentLensLlamaHandler
+cm = CallbackManager([AgentLensLlamaHandler()])
+llm = SomeLLM(callback_manager=cm)</code></pre></div>
+<blockquote><strong>Note:</strong> LlamaIndex ≥0.14 routed <em>agents</em> through a new instrumentation system that bypasses <code>CallbackManager</code>. The handler hooks the (still-supported) callback manager — attach <code>cm</code> to the LLM/index to capture llm/retrieval spans.</blockquote>
+<h3 id="crewai--step_callback--task_callback--instrument_tools">CrewAI — <code>step_callback</code> / <code>task_callback</code> / <code>instrument_tools</code><a class="anchor" href="#crewai--step_callback--task_callback--instrument_tools" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.crewai import step_callback, task_callback, instrument_tools
+agent = Agent(..., tools=instrument_tools(tools), step_callback=step_callback)
+Crew(agents=[agent], tasks=[task], task_callback=task_callback).kickoff()</code></pre></div>
+<h3 id="autogen--instrument_agent">AutoGen — <code>instrument_agent</code><a class="anchor" href="#autogen--instrument_agent" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.autogen import instrument_agent
+agent = instrument_agent(agent)</code></pre></div>
+<h3 id="pydanticai--instrument_agent">PydanticAI — <code>instrument_agent</code><a class="anchor" href="#pydanticai--instrument_agent" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.pydanticai import instrument_agent
+agent = instrument_agent(agent)
+agent.run_sync(&quot;...&quot;)</code></pre></div>
+<h3 id="openai-agents-sdk--install">OpenAI Agents SDK — <code>install()</code><a class="anchor" href="#openai-agents-sdk--install" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.openai_agents import install
+install()          # register the AgentLens trace processor once, before running agents</code></pre></div>
+<p>Returns <code>True</code> on success, <code>False</code> if the SDK isn&#x27;t importable.</p>
+<h3 id="strands--callback_handler">Strands — <code>callback_handler</code><a class="anchor" href="#strands--callback_handler" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.strands import callback_handler
+agent = Agent(model=model, tools=tools, callback_handler=callback_handler)</code></pre></div>
+<h3 id="anthropic-agent-sdk--traced_async_tool">Anthropic Agent SDK — <code>traced_async_tool</code><a class="anchor" href="#anthropic-agent-sdk--traced_async_tool" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.anthropic_agents import traced_async_tool
+
+@traced_async_tool(&quot;calculator&quot;)
+async def calc(expression: str) -&gt; str: ...</code></pre></div>
+<h3 id="mcp--fastmcp--instrument_server">MCP / FastMCP — <code>instrument_server</code><a class="anchor" href="#mcp--fastmcp--instrument_server" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from fastmcp import FastMCP
+from agentlens.adapters.fastmcp import instrument_server   # or agentlens.adapters.mcp
+mcp = FastMCP(&quot;calc-server&quot;)
+@mcp.tool()
+def calculator(expression: str) -&gt; str: ...
+instrument_server(mcp)        # wraps every registered tool → tool spans (args/result/errors)</code></pre></div>
+<h3 id="any-framework--generic-tool-wrappers-adapterscommon">Any framework — generic tool wrappers (<code>adapters.common</code>)<a class="anchor" href="#any-framework--generic-tool-wrappers-adapterscommon" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens.adapters.common import wrap_tool, traced_tool
+
+search = wrap_tool(search_fn, name=&quot;web_search&quot;)   # wrap an existing callable
+
+@traced_tool(&quot;calculator&quot;)                          # or decorate
+def calc(expr): ...</code></pre></div>
+<p><strong>Verified coverage</strong> (real agents against a live LLM): all of the above capture real spans. See <a href="#15-troubleshooting">§15 troubleshooting</a> for the per-framework gotchas discovered during that testing.</p>
+<hr>
+<h2 id="7-span-model--spankind-reference">7. Span model &amp; <code>SpanKind</code> reference<a class="anchor" href="#7-span-model--spankind-reference" aria-label="Link">#</a></h2>
+<p>Everything is one <code>Span</code>. You rarely construct it by hand (the loggers do), but here&#x27;s the shape:</p>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>Span(
+    event_id, trace_id, span_id, parent_span_id, session_id,
+    project, kind, name,
+    start_time, end_time, duration_ms,
+    status,                 # &quot;ok&quot; | &quot;error&quot;
+    attributes={...},       # kind-specific (see table below)
+)</code></pre></div>
+<p><code>SpanKind</code> values and their conventional <code>attributes</code>:</p>
+<div class="tablewrap"><table><thead><tr><th><code>SpanKind</code></th><th>Meaning</th><th>Conventional attributes</th></tr></thead><tbody><tr><td><code>session</code></td><td>A conversation / user session</td><td>name, status</td></tr><tr><td><code>workflow</code></td><td>One run of a pipeline / graph</td><td>name, status</td></tr><tr><td><code>agent</code></td><td>A reasoning unit / sub-agent</td><td>agent_name, role, input, output, model</td></tr><tr><td><code>llm</code></td><td>A model call</td><td>model, provider, prompt, response, input_tokens, output_tokens, cost</td></tr><tr><td><code>tool</code></td><td>A tool/function call</td><td>tool_name, args, result, retry_count, error</td></tr><tr><td><code>memory</code></td><td>A memory operation</td><td>op (read/write/update/delete), memory_key, value, hit</td></tr><tr><td><code>decision</code></td><td>A branch/choice</td><td>options, chosen, reason</td></tr><tr><td><code>retrieval</code></td><td>A retrieval step</td><td>query, results, top_k, retriever</td></tr><tr><td><code>other</code></td><td>Anything else</td><td>free-form</td></tr></tbody></table></div>
+<p>At ingest, spans fan out into denormalized side-tables (<code>tool_calls</code>, <code>memory_ops</code>, <code>failures</code>) that power the explorer pages, and <code>llm</code> spans get <strong>cost backfilled</strong> from the price book when <code>cost</code> is missing.</p>
+<hr>
+<h2 id="8-the-dashboard--page-by-page">8. The dashboard — page by page<a class="anchor" href="#8-the-dashboard--page-by-page" aria-label="Link">#</a></h2>
+<p>Launch: <code>agentlens ui</code> → http://127.0.0.1:7180. Use the project selector (top) to scope every page.</p>
+<div class="tablewrap"><table><thead><tr><th>Page</th><th>Route</th><th>Shows</th><th>Use it to…</th></tr></thead><tbody><tr><td><strong>Overview</strong></td><td><code>/</code></td><td>total runs, success/failure rate, p50/p95 latency, total cost, tool-call count</td><td>Get the health snapshot at a glance.</td></tr><tr><td><strong>Runs</strong></td><td><code>/runs</code></td><td>list of runs (trace_id, name, status, cost, counts, duration)</td><td>Find a specific run to inspect.</td></tr><tr><td><strong>Run detail</strong></td><td><code>/runs/{id}</code></td><td>the <strong>workflow execution graph</strong> — span tree with per-node kind, status, duration, cost</td><td>Answer &quot;what happened, step by step, and where did it go wrong?&quot;</td></tr><tr><td><strong>Agents</strong></td><td><code>/agents</code></td><td>per-agent runs, success rate, cost</td><td>See which agent is expensive / failing.</td></tr><tr><td><strong>Tools</strong></td><td><code>/tools</code></td><td>most-used / slowest / failed tools, retries</td><td>Debug tool usage and flakiness.</td></tr><tr><td><strong>Memory</strong></td><td><code>/memory</code></td><td>reads/writes/updates/deletes, hit rate</td><td>Audit memory access and cache effectiveness.</td></tr><tr><td><strong>Failures</strong></td><td><code>/failures</code></td><td>exceptions, timeouts, rate limits, retries</td><td>Triage everything that errored.</td></tr><tr><td><strong>Cost</strong></td><td><code>/cost</code></td><td>tokens &amp; cost by model, by day, by agent</td><td>Track spend and find the expensive paths.</td></tr></tbody></table></div>
+<p>The Run-detail tree is the centerpiece — e.g. a real ReAct run renders as:</p>
+<div class="codeblock"><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>workflow  langchain.chain            851.1ms ok
+  llm     llama-3.3-70b-versatile    317.6ms ok
+  tool    calculator                   1.2ms ok
+  llm     llama-3.3-70b-versatile    306.7ms ok</code></pre></div>
+<hr>
+<h2 id="9-cli-reference">9. CLI reference<a class="anchor" href="#9-cli-reference" aria-label="Link">#</a></h2>
+<div class="codeblock"><span class="lang">bash</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>agentlens ui                          # start the dashboard (default 127.0.0.1:7180)
+agentlens ui --host 0.0.0.0 --port 9000
+agentlens ui --backend-store-uri /path/to/agentlens.db
+agentlens providers                   # list LLM providers available for optional replay/cost
+agentlens version</code></pre></div>
+<p><code>agentlens ui</code> reads <code>AGENTLENS_HOST</code> / <code>AGENTLENS_PORT</code> / <code>AGENTLENS_STORE</code> as defaults.</p>
+<hr>
+<h2 id="10-configuration--environment-variables">10. Configuration &amp; environment variables<a class="anchor" href="#10-configuration--environment-variables" aria-label="Link">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Variable</th><th>Default</th><th>Effect</th></tr></thead><tbody><tr><td><code>AGENTLENS_PORT</code></td><td><code>7180</code></td><td>Dashboard port (also <code>--port</code>).</td></tr><tr><td><code>AGENTLENS_HOST</code></td><td><code>127.0.0.1</code></td><td>Dashboard host (also <code>--host</code>).</td></tr><tr><td><code>AGENTLENS_STORE</code></td><td><em>(hidden)</em></td><td>SQLite path (also <code>--backend-store-uri</code> / <code>db_path=</code>).</td></tr><tr><td><code>AGENTLENS_OPENAI_BASE_URL</code></td><td>—</td><td>Override base URL for the optional LLM replay layer (OpenAI-compatible endpoints, e.g. Groq).</td></tr><tr><td><code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>GEMINI_API_KEY</code>/<code>GOOGLE_API_KEY</code>, <code>GROQ_API_KEY</code></td><td>—</td><td>Only used by the optional replay/<code>/generate</code> feature; <strong>not</strong> needed for tracing.</td></tr></tbody></table></div>
+<p><strong>Storage location:</strong> hidden <code>./.agentlens/agentlens.db</code> (per project directory), <code>PRAGMA journal_mode=WAL</code>. The dot-folder survives accidental cleanup better than a plain logs dir and stays out of <code>git status</code>.</p>
+<hr>
+<h2 id="11-local-vs-http-client--when-to-use-which">11. Local vs HTTP client — when to use which<a class="anchor" href="#11-local-vs-http-client--when-to-use-which" aria-label="Link">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th></th><th><strong>LocalClient</strong> (default)</th><th><strong>HttpClient</strong></th></tr></thead><tbody><tr><td>Trigger</td><td><code>init()</code> / <code>monitor.start()</code> with no <code>tracking_uri</code></td><td>pass <code>tracking_uri=&quot;http://host:7180&quot;</code></td></tr><tr><td>Path</td><td>writes straight to SQLite</td><td>batches spans on a background thread → <code>POST /api/events</code></td></tr><tr><td>Best for</td><td>single script, notebook, local dev, tests</td><td>long-running services, multiple processes/workers feeding one store</td></tr><tr><td>Flush</td><td>synchronous (nothing to flush)</td><td>auto every ~1s + on exit; <code>agentlens.flush()</code> to force</td></tr></tbody></table></div>
+<p><strong>Rule:</strong> one process → local. Many processes that must share one dashboard → run <code>agentlens ui</code> once, point everyone at it with <code>tracking_uri</code>.</p>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code># worker processes
+agentlens.init(project=&quot;prod-bot&quot;, tracking_uri=&quot;http://127.0.0.1:7180&quot;)
+# one server
+#   agentlens ui</code></pre></div>
+<hr>
+<h2 id="12-cost--token-tracking">12. Cost &amp; token tracking<a class="anchor" href="#12-cost--token-tracking" aria-label="Link">#</a></h2>
+<ul><li><code>log_llm(...)</code> / auto-patch record <code>input_tokens</code>, <code>output_tokens</code>. If <code>cost</code> is omitted, it&#x27;s <strong>backfilled at ingest</strong> from a built-in, editable price book (includes current Claude/GPT/Groq models).</li><li>Token estimation falls back to a heuristic when an SDK doesn&#x27;t report usage.</li><li>The <strong>Cost Explorer</strong> aggregates by model, by day, and by agent.</li><li><code>agentlens providers</code> shows which providers are configured for the optional replay feature.</li></ul>
+<p>To track a provider/model the price book doesn&#x27;t know, either pass <code>cost=</code> explicitly to <code>log_llm</code>, or add the model to <code>agentlens/server/pricing.py</code>.</p>
+<hr>
+<h2 id="13-recipes">13. Recipes<a class="anchor" href="#13-recipes" aria-label="Link">#</a></h2>
+<h3 id="131-minimal-custom-agent-fully-traced">13.1 Minimal custom agent, fully traced<a class="anchor" href="#131-minimal-custom-agent-fully-traced" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>import agentlens
+agentlens.init(project=&quot;demo&quot;)
+
+with agentlens.trace_workflow(&quot;answer&quot;):
+    with agentlens.trace_agent(&quot;planner&quot;):
+        agentlens.log_decision(options=[&quot;search&quot;, &quot;answer&quot;], chosen=&quot;search&quot;,
+                               reason=&quot;missing facts&quot;)
+        agentlens.log_memory(&quot;read&quot;, &quot;user_prefs&quot;, hit=True)
+        try:
+            result = search_tool(q)
+            agentlens.log_tool(&quot;search&quot;, args={&quot;q&quot;: q}, result=result)
+        except Exception as e:
+            agentlens.log_tool(&quot;search&quot;, args={&quot;q&quot;: q}, error=e, retry_count=2)
+        agentlens.log_llm(model=&quot;gpt-4o&quot;, input_tokens=900, output_tokens=210)</code></pre></div>
+<h3 id="132-zero-config--framework-the-lazy-best-practice">13.2 Zero-config + framework, the lazy best-practice<a class="anchor" href="#132-zero-config--framework-the-lazy-best-practice" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>from agentlens import monitor
+from agentlens.adapters.langgraph import AgentLensCallbackHandler
+
+monitor.start(project=&quot;research&quot;)
+agent.invoke(state, config={&quot;callbacks&quot;: [AgentLensCallbackHandler()]})</code></pre></div>
+<h3 id="133-catch-a-tool-failure-in-the-dashboard">13.3 Catch a tool failure in the dashboard<a class="anchor" href="#133-catch-a-tool-failure-in-the-dashboard" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>try:
+    out = flaky_tool(x)
+    agentlens.log_tool(&quot;flaky_tool&quot;, args={&quot;x&quot;: x}, result=out)
+except Exception as e:
+    agentlens.log_tool(&quot;flaky_tool&quot;, args={&quot;x&quot;: x}, error=e)   # → Failure Explorer
+    raise</code></pre></div>
+<h3 id="134-correlate-agentlens-with-your-own-logs">13.4 Correlate AgentLens with your own logs<a class="anchor" href="#134-correlate-agentlens-with-your-own-logs" aria-label="Link">#</a></h3>
+<div class="codeblock"><span class="lang">python</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>logger.info(&quot;starting step&quot;, extra={&quot;trace_id&quot;: agentlens.current_trace_id()})</code></pre></div>
+<hr>
+<h2 id="14-safety-guarantees">14. Safety guarantees<a class="anchor" href="#14-safety-guarantees" aria-label="Link">#</a></h2>
+<ul><li><strong>Observability never breaks your agent.</strong> Every emit path swallows its own errors. A bad span, a full disk, a downed server → your code runs on.</li><li><strong><code>trace_*</code> re-raises your exceptions</strong> (it records <code>status=&quot;error&quot;</code> first). Only <em>observability</em> errors are swallowed, never <em>your</em> errors.</li><li><strong>Idempotent patching.</strong> <code>monitor.start()</code> twice is safe; <code>monitor.stop()</code> restores originals.</li><li><strong>Import-time safe adapters.</strong> Importing an adapter for a framework you don&#x27;t have installed won&#x27;t crash.</li><li><strong>Offline &amp; private.</strong> No network, no keys, no telemetry unless you opt into the HTTP client or the replay feature.</li></ul>
+<hr>
+<h2 id="15-troubleshooting">15. Troubleshooting<a class="anchor" href="#15-troubleshooting" aria-label="Link">#</a></h2>
+<div class="tablewrap"><table><thead><tr><th>Symptom</th><th>Cause / fix</th></tr></thead><tbody><tr><td>No spans in dashboard</td><td>Did you <code>init()</code> / <code>monitor.start()</code>? Right <strong>project</strong> selected in the UI? Right <code>db_path</code>?</td></tr><tr><td>LLM calls not captured by auto-patch</td><td>SDK imported <em>after</em> <code>monitor.start()</code> in some setups — start first, or use the adapter/manual layer.</td></tr><tr><td><strong>FastMCP</strong> import errors / empty module</td><td>fastmcp 3.x can install as a broken empty namespace package on some environments. Pin <strong><code>fastmcp==2.14.7</code></strong>.</td></tr><tr><td><strong>CrewAI + Groq</strong> → <code>400 cache_breakpoint unsupported</code></td><td>CrewAI&#x27;s litellm path (<code>model=&quot;groq/...&quot;</code>) leaks its internal <code>cache_breakpoint</code> message flag. Use the native provider, which strips it: <code>LLM(model=MODEL, provider=&quot;openai&quot;, base_url=&quot;https://api.groq.com/openai/v1&quot;, api_key=KEY)</code>.</td></tr><tr><td><strong>LlamaIndex ≥0.14</strong> agent spans missing</td><td>Agents bypass <code>CallbackManager</code>. Attach <code>AgentLensLlamaHandler</code> via <code>CallbackManager</code> to the LLM/index to capture llm/retrieval spans.</td></tr><tr><td><strong>OpenAI Agents SDK + Groq</strong> tool calls fail</td><td>Groq rejects that SDK&#x27;s tool-call wire format. Use a plain chat agent, or an OpenAI/Anthropic backend, for tool agents.</td></tr><tr><td>Cost shows 0</td><td>Model not in price book — pass <code>cost=</code> to <code>log_llm</code> or add it to <code>pricing.py</code>.</td></tr><tr><td>Port already in use</td><td><code>agentlens ui --port 9000</code> or set <code>AGENTLENS_PORT</code>.</td></tr><tr><td>Errors not in Failure Explorer</td><td>Pass the exception to <code>log_tool(error=...)</code> / <code>log_error(...)</code>, or let <code>trace_*</code> see it (don&#x27;t catch-and-swallow before the span closes).</td></tr></tbody></table></div>
+<hr>
+<h2 id="16-ai-agent-cheat-sheet">16. AI-agent cheat sheet<a class="anchor" href="#16-ai-agent-cheat-sheet" aria-label="Link">#</a></h2>
+<p>Copy-paste decision rules for an autonomous coding agent integrating AgentLens.</p>
+<div class="codeblock"><span class="lang">text</span><button class="copy" type="button" aria-label="Copy">Copy</button><pre><code>IF user calls LLM SDKs directly (openai/anthropic/gemini/groq/litellm):
+    from agentlens import monitor; monitor.start(project=&quot;&lt;name&gt;&quot;)
+
+IF user uses a framework:
+    langchain/langgraph -&gt; AgentLensCallbackHandler in config={&quot;callbacks&quot;:[...]}
+    llamaindex          -&gt; AgentLensLlamaHandler via CallbackManager on the LLM
+    crewai              -&gt; step_callback/task_callback + instrument_tools(tools)
+    autogen             -&gt; instrument_agent(agent)
+    pydanticai          -&gt; instrument_agent(agent)
+    openai-agents       -&gt; install()  # once, before running
+    strands             -&gt; Agent(callback_handler=callback_handler)
+    anthropic-agents    -&gt; @traced_async_tool(name)
+    mcp/fastmcp         -&gt; instrument_server(server)
+    none/custom         -&gt; trace_agent + log_tool/log_memory/log_llm/log_decision
+
+IF custom tool not in a framework:
+    from agentlens.adapters.common import traced_tool  # decorator
+    # or wrap_tool(fn, name)
+
+ALWAYS safe: every log_/trace_ swallows its own errors; trace_* still re-raises user errors.
+INIT once: monitor.start() implies init(); else call agentlens.init(project=...).
+MULTI-PROCESS: init(..., tracking_uri=&quot;http://host:7180&quot;); run one `agentlens ui`.
+VIEW: agentlens ui  -&gt;  http://127.0.0.1:7180
+STORE: ./.agentlens/agentlens.db (WAL, hidden, offline).
+PIN: fastmcp==2.14.7.</code></pre></div>
+<hr>
+<p><em>AgentLens — see why your agent did what it did. Local. Zero-config. Yours.</em></p>
+</main>
+</div>
+<script>
+// copy buttons
+document.querySelectorAll('.codeblock .copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var code = btn.parentElement.querySelector('code').innerText;
+    navigator.clipboard.writeText(code).then(function(){
+      btn.textContent='Copied'; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent='Copy'; btn.classList.remove('done'); }, 1400);
+    });
+  });
+});
+// sidebar search filter
+var search = document.getElementById('docsearch');
+if(search){
+  search.addEventListener('input', function(){
+    var q = search.value.trim().toLowerCase();
+    document.querySelectorAll('nav a').forEach(function(a){
+      a.classList.toggle('hidden', q && a.textContent.toLowerCase().indexOf(q)===-1);
+    });
+  });
+}
+// scrollspy: highlight nav link of the section in view
+var links = [].slice.call(document.querySelectorAll('nav a'));
+var map = {}; links.forEach(function(a){ map[a.dataset.slug]=a; });
+var heads = links.map(function(a){ return document.getElementById(a.dataset.slug); }).filter(Boolean);
+function spy(){
+  var top = window.scrollY + 120, cur = null;
+  heads.forEach(function(h){ if(h.offsetTop <= top) cur = h.id; });
+  links.forEach(function(a){ a.classList.toggle('active', a.dataset.slug===cur); });
+}
+window.addEventListener('scroll', spy, {passive:true}); spy();
+// mobile menu
+var aside = document.querySelector('aside'), tog = document.querySelector('.menu-toggle');
+if(tog){ tog.addEventListener('click', function(){ aside.classList.toggle('open'); }); }
+document.querySelectorAll('nav a').forEach(function(a){
+  a.addEventListener('click', function(){ if(aside.classList.contains('open')) aside.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

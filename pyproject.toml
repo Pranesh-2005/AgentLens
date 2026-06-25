@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentlens"
+version = "0.1.0"
+description = "AgentLens: local-first diagnostics & observability for AI agents. Answers 'Why did my agent behave this way?' with one line and a single SQLite file."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Pranesh", email = "praneshmadhan646@gmail.com" }]
+keywords = ["agent", "observability", "tracing", "diagnostics", "llm", "tools", "mcp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Debuggers",
+]
+dependencies = [
+    "fastapi>=0.100",
+    "uvicorn>=0.23",
+    "jinja2>=3.1",
+    "pydantic>=2.0",
+    "httpx>=0.24",
+]
+
+[project.optional-dependencies]
+# Framework adapters. Auto-patching of LLM SDKs (openai/anthropic/gemini/groq/
+# litellm) needs no extra here — AgentLens patches whatever is already installed.
+langchain = ["langchain-core>=0.1"]
+langgraph = ["langgraph>=0.1"]
+llamaindex = ["llama-index-core>=0.10"]
+crewai = ["crewai>=0.1"]
+autogen = ["pyautogen>=0.2"]
+pydanticai = ["pydantic-ai>=0.0.1"]
+openai-agents = ["openai-agents>=0.0.1"]
+mcp = ["mcp>=1.0"]
+fastmcp = ["fastmcp>=0.1"]
+all = [
+    "langchain-core>=0.1", "langgraph>=0.1", "llama-index-core>=0.10",
+    "crewai>=0.1", "pyautogen>=0.2", "mcp>=1.0",
+]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+agentlens = "agentlens.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Pranesh-2005/agentlens"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["agentlens*"]
+
+[tool.setuptools.package-data]
+"agentlens.server" = ["templates/*.html", "static/*.css", "static/*.js"]
