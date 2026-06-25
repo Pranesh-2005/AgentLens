@@ -11,10 +11,12 @@ behavior* — tool usage, memory access, workflow paths, decisions, failures,
 retries, latency, and cost.
 
 ```bash
-pip install agentlens                 # core: store + dashboard + manual API + auto-patch
-pip install "agentlens[langchain]"    # framework adapters as extras (langgraph, crewai, …)
-pip install "agentlens[all]"          # every adapter
+pip install pyagentlens               # core: store + dashboard + manual API + auto-patch
+pip install "pyagentlens[langchain]"  # framework adapters as extras (langgraph, crewai, …)
+pip install "pyagentlens[all]"        # every adapter
 ```
+
+> Package name on PyPI is `pyagentlens`; the import name is `agentlens`.
 
 ```python
 from agentlens import monitor

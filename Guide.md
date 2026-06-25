@@ -77,21 +77,23 @@ session
 ## 2. Install
 
 ```bash
-pip install agentlens                 # core (SQLite + dashboard + manual API + auto-patch)
+pip install pyagentlens               # core (SQLite + dashboard + manual API + auto-patch)
 
 # framework adapters as extras (only what you use):
-pip install "agentlens[langchain]"
-pip install "agentlens[langgraph]"
-pip install "agentlens[llamaindex]"
-pip install "agentlens[crewai]"
-pip install "agentlens[autogen]"
-pip install "agentlens[pydanticai]"
-pip install "agentlens[openai-agents]"
-pip install "agentlens[mcp]"
-pip install "agentlens[fastmcp]"
-pip install "agentlens[all]"          # every adapter
-pip install "agentlens[dev]"          # + pytest
+pip install "pyagentlens[langchain]"
+pip install "pyagentlens[langgraph]"
+pip install "pyagentlens[llamaindex]"
+pip install "pyagentlens[crewai]"
+pip install "pyagentlens[autogen]"
+pip install "pyagentlens[pydanticai]"
+pip install "pyagentlens[openai-agents]"
+pip install "pyagentlens[mcp]"
+pip install "pyagentlens[fastmcp]"
+pip install "pyagentlens[all]"        # every adapter
+pip install "pyagentlens[dev]"        # + pytest
 ```
+
+> Package name on PyPI is `pyagentlens`; the import name stays `agentlens` (`from agentlens import monitor`).
 
 Auto-patch needs **no extra** — it patches whatever LLM SDK is already installed (`openai`, `anthropic`, `google-generativeai`, `groq`, `litellm`).
 
